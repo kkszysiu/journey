@@ -3,7 +3,7 @@
 package plugins
 
 import (
-	"github.com/kabukky/journey/structure"
+	"github.com/kkszysiu/journey/structure"
 	"errors"
 	"sync"
 )

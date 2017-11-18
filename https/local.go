@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/kabukky/httpscerts"
-	"github.com/kabukky/journey/configuration"
-	"github.com/kabukky/journey/filenames"
+	"github.com/kkszysiu/journey/configuration"
+	"github.com/kkszysiu/journey/filenames"
 )
 
 func checkCertificates() {
