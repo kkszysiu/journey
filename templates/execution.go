@@ -3,15 +3,16 @@ package templates
 import (
 	"bytes"
 	"errors"
+	"net/http"
+	"path/filepath"
+	"sync"
+
 	"github.com/kkszysiu/journey/database"
 	"github.com/kkszysiu/journey/filenames"
 	"github.com/kkszysiu/journey/helpers"
 	"github.com/kkszysiu/journey/plugins"
 	"github.com/kkszysiu/journey/structure"
 	"github.com/kkszysiu/journey/structure/methods"
-	"net/http"
-	"path/filepath"
-	"sync"
 )
 
 type Templates struct {
