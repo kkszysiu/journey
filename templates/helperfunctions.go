@@ -11,6 +11,7 @@ var helperFuctions = map[string]func(*structure.Helper, *structure.RequestData) 
 
 	// General functions
 	"if":               ifFunc,
+	"is":				isFunc,
 	"unless":           unlessFunc,
 	"foreach":          foreachFunc,
 	"!<":               extendFunc,
@@ -47,8 +48,10 @@ var helperFuctions = map[string]func(*structure.Helper, *structure.RequestData) 
 	"post_class": post_classFunc,
 	"featured":   featuredFunc,
 	"feature_image": imageFunc,
+	"primary_tag":primaryTagFunc,
 	"id":         idFunc,
 	"post.id":    idFunc,
+	"comment_id": idFunc,
 
 	// Tag functions
 	"tag.name": tagDotNameFunc,

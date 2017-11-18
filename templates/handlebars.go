@@ -1,6 +1,7 @@
 package templates
 
 import (
+	"fmt"
 	"bytes"
 	"github.com/kkszysiu/journey/conversion"
 	"github.com/kkszysiu/journey/database"
@@ -503,6 +504,13 @@ func postsFunc(helper *structure.Helper, values *structure.RequestData) []byte {
 	return []byte{}
 }
 
+func primaryTagFunc(helper *structure.Helper, values *structure.RequestData) []byte {
+	if len(values.Posts[values.CurrentPostIndex].Tags) >= 1 {
+		return evaluateEscape(values.Posts[values.CurrentPostIndex].Tags[0].Name, helper.Unescaped)
+	}
+	return []byte{}
+}
+
 func tagsFunc(helper *structure.Helper, values *structure.RequestData) []byte {
 	if len(values.Posts[values.CurrentPostIndex].Tags) > 0 {
 		separator := ", "
@@ -855,6 +863,14 @@ func ifFunc(helper *structure.Helper, values *structure.RequestData) []byte {
 				return executeHelper(&helper.Arguments[len(helper.Arguments)-1], values, values.CurrentHelperContext)
 			}
 		}
+	}
+	return []byte{}
+}
+
+func isFunc(helper *structure.Helper, values *structure.RequestData) []byte {
+	if len(helper.Arguments) != 0 {
+		fmt.Println("helper.Arguments", helper.Arguments)
+		fmt.Println(helper, values, values.CurrentHelperContext)
 	}
 	return []byte{}
 }
