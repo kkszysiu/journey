@@ -1,0 +1,20 @@
+language: go
+go:
+- 1.9.2
+notifications:
+  email: false
+gobuild_args: -x -v --ldflags '-extldflags "-static"'
+env:
+- GIMME_ARCH=amd64 GIMME_OS=linux
+before_deploy:
+- go build -x -v --ldflags '-extldflags "-static"'
+- tar -cvJf journey-$GIMME_OS-$GIMME_ARCH.tar.xz journey content built-in
+deploy:
+  provider: releases
+  api_key:
+    secure: GqyaDE9oTLVlgdotAW1uEBRUnmj48vF39Fr9S1N3cscs6E5sbg3fPuXuczCheUvXl4zh3Ns9PG8T2BpaIxcuL5qWsvVtgaAEVMx/A82Hg64GYNIyRnCG4JC93skmJXfeQnrmc/YxP99YSokY+9CXAeYBRalXqyNwWfplBWPohqZabP1quE1ib2j5kF32l4YFHQVfl8QiavlMVBM+tHz5BSydcCWFBvfmpHdqZOj1RASIZXFZcE9/FpXE2oGFJXYrTEcz/Z8YcMIPKDD5gtpKrZDRnIWEzZIkv3ZA8yxCEJs63E3w/ZIUermYcINxIOUjV0aBuQn9GMv+8PJWnFQnhniWCYQQ1JutvOBjNV0BRfntuqD7lbBFt55itURzV72aYCc3DlTrErNrl2wHFOHi8gDJfc1Qfm4eXKogECOvo5AGBEvFBm8mucAyvY4TzH5TADei63WHJ8BLi6pS8Z2OfkcW0ll/uxU/ZYTxf0EnzVz7Md9NIUC86H2AFDg6CfipHZ57V1b9wNR3cH13S2ar3F0JdRU8kqx8BcRu+avmwa3IGYYZxl8mhzfjzPsy5Lf9U3Tv+o3qBNTqnjObmHvbIkEW3I/sG88VK95DN2JBgy3q+2F9HzM2c34soLsNB03ZNmWN0S99+tHedzotFKjRnV6aIc8bACudWsh7g09pagk=
+  file: 'journey-$GIMME_OS-$GIMME_ARCH.tar.xz'
+  skip_cleanup: true
+  on:
+    repo: kkszysiu/journey
+    tags: true
