@@ -11,7 +11,7 @@ var helperFuctions = map[string]func(*structure.Helper, *structure.RequestData) 
 
 	// General functions
 	"if":               ifFunc,
-	"is":				isFunc,
+	"is":               isFunc,
 	"unless":           unlessFunc,
 	"foreach":          foreachFunc,
 	"!<":               extendFunc,
@@ -41,37 +41,39 @@ var helperFuctions = map[string]func(*structure.Helper, *structure.RequestData) 
 	"@blog.navigation":  navigationFunc,
 
 	// Post functions
-	"post":       postFunc,
-	"excerpt":    excerptFunc,
-	"title":      titleFunc,
-	"content":    contentFunc,
-	"post_class": post_classFunc,
-	"featured":   featuredFunc,
+	"post":          postFunc,
+	"excerpt":       excerptFunc,
+	"title":         titleFunc,
+	"content":       contentFunc,
+	"post_class":    post_classFunc,
+	"featured":      featuredFunc,
 	"feature_image": imageFunc,
-	"primary_tag":primaryTagFunc,
-	"id":         idFunc,
-	"post.id":    idFunc,
-	"comment_id": idFunc,
+	"id":            idFunc,
+	"post.id":       idFunc,
+	"comment_id":    idFunc,
+
+	// Primary tag
+	"primary_tag": primaryTagFunc,
 
 	// Tag functions
 	"tag.name": tagDotNameFunc,
 	"tag.slug": tagDotSlugFunc,
 
 	// Author functions
-	"author":          authorFunc,
-	"bio":             bioFunc,
-	"email":           emailFunc,
-	"website":         websiteFunc,
-	"cover":           coverFunc,
-	"location":        locationFunc,
-	"author.name":     authorDotNameFunc,
-	"author.bio":      bioFunc,
-	"author.email":    emailFunc,
-	"author.website":  websiteFunc,
-	"author.image":    authorDotImageFunc,
+	"author":               authorFunc,
+	"bio":                  bioFunc,
+	"email":                emailFunc,
+	"website":              websiteFunc,
+	"cover":                coverFunc,
+	"location":             locationFunc,
+	"author.name":          authorDotNameFunc,
+	"author.bio":           bioFunc,
+	"author.email":         emailFunc,
+	"author.website":       websiteFunc,
+	"author.image":         authorDotImageFunc,
 	"author.profile_image": authorDotImageFunc,
-	"author.cover":    coverFunc,
-	"author.location": locationFunc,
+	"author.cover":         coverFunc,
+	"author.location":      locationFunc,
 
 	// Navigation functions
 	"navigation": navigationFunc,
@@ -103,7 +105,7 @@ var helperFuctions = map[string]func(*structure.Helper, *structure.RequestData) 
 	"pagination.next": nextFunc,
 
 	// Possible plural arguments
-	"pagination.pages": pagesFunc,
+	"pagination.pages":    pagesFunc,
 	"pagination.total":    paginationDotTotalFunc,
 	"../pagination.total": paginationDotTotalFunc,
 }

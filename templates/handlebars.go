@@ -1,19 +1,20 @@
 package templates
 
 import (
-	"fmt"
 	"bytes"
+	"fmt"
+	"html"
+	"log"
+	"net/url"
+	"strconv"
+	"strings"
+
 	"github.com/kkszysiu/journey/conversion"
 	"github.com/kkszysiu/journey/database"
 	"github.com/kkszysiu/journey/date"
 	"github.com/kkszysiu/journey/plugins"
 	"github.com/kkszysiu/journey/structure"
 	"github.com/kkszysiu/journey/structure/methods"
-	"html"
-	"log"
-	"net/url"
-	"strconv"
-	"strings"
 )
 
 // Helper fuctions
@@ -361,6 +362,51 @@ func ghost_headFunc(helper *structure.Helper, values *structure.RequestData) []b
 	buffer.Write(evaluateEscape(values.Blog.Url, helper.Unescaped))
 	buffer.WriteString(values.CurrentPath)
 	buffer.WriteString("\">")
+
+	if values.CurrentTemplate == 1 || values.CurrentHelperContext == 1 { // post
+		// keywords
+		if len(values.Posts[values.CurrentPostIndex].Tags) > 0 {
+			buffer.WriteString("<link rel=\"keywords\" content=\"")
+			separator := ","
+			for index, tag := range values.Posts[values.CurrentPostIndex].Tags {
+				if index != 0 {
+					buffer.WriteString(separator)
+				}
+				buffer.Write(evaluateEscape(bytes.TrimSpace(tag.Name), helper.Unescaped))
+			}
+			buffer.WriteString("\">")
+		}
+
+		// og:tags
+		buffer.WriteString("<meta property=\"og:title\" content=\"")
+		buffer.Write(evaluateEscape(values.Posts[values.CurrentPostIndex].Title, helper.Unescaped))
+		buffer.WriteString("\">")
+
+		buffer.WriteString("<meta property=\"og:description\" content=\"")
+		if len(values.Posts[values.CurrentPostIndex].MetaDescription) > 0 {
+			buffer.Write(evaluateEscape(values.Posts[values.CurrentPostIndex].Title, helper.Unescaped))
+		} else if len(values.Posts[values.CurrentPostIndex].Html) > 0 {
+			number := 300 // og:description should be limited to 300 characters
+			// Use runes for UTF-8 support
+			runes := []rune(string(conversion.StripTagsFromHtml(values.Posts[values.CurrentPostIndex].Html)))
+			if len(runes) < number {
+				buffer.WriteString(string(runes))
+			}
+			buffer.WriteString(strings.TrimSpace(string(runes[:number-1])) + "…")
+		}
+		buffer.WriteString("\">")
+
+		buffer.WriteString("<meta property=\"og:image\" content=\"")
+		buffer.Write(evaluateEscape(values.Blog.Url, helper.Unescaped))
+		buffer.Write(evaluateEscape(values.Posts[values.CurrentPostIndex].Image, helper.Unescaped))
+		buffer.WriteString("\">")
+
+		buffer.WriteString("<meta property=\"og:url\" content=\"")
+		buffer.Write(evaluateEscape(values.Blog.Url, helper.Unescaped))
+		buffer.WriteString(values.CurrentPath)
+		buffer.WriteString("\">")
+	}
+
 	// TODO: structured data
 	return buffer.Bytes()
 }
@@ -505,10 +551,13 @@ func postsFunc(helper *structure.Helper, values *structure.RequestData) []byte {
 }
 
 func primaryTagFunc(helper *structure.Helper, values *structure.RequestData) []byte {
-	if len(values.Posts[values.CurrentPostIndex].Tags) >= 1 {
-		return evaluateEscape(values.Posts[values.CurrentPostIndex].Tags[0].Name, helper.Unescaped)
+	// Check if helper is block helper
+	if len(helper.Block) != 0 {
+		return executeHelper(helper, values, 5) // context = author
 	}
-	return []byte{}
+
+	var buffer bytes.Buffer
+	return buffer.Bytes()
 }
 
 func tagsFunc(helper *structure.Helper, values *structure.RequestData) []byte {
@@ -609,6 +658,13 @@ func urlFunc(helper *structure.Helper, values *structure.RequestData) []byte {
 	} else if values.CurrentHelperContext == 4 { // navigation
 		buffer.WriteString(values.Blog.NavigationItems[values.CurrentNavigationIndex].Url)
 		return evaluateEscape(buffer.Bytes(), helper.Unescaped)
+	} else if values.CurrentHelperContext == 5 { // primary tag
+		if len(values.Posts[values.CurrentPostIndex].Tags) >= 1 {
+			buffer.WriteString("/tag/")
+			buffer.WriteString(values.Posts[values.CurrentPostIndex].Tags[0].Slug)
+			return evaluateEscape(buffer.Bytes(), helper.Unescaped)
+		}
+		return []byte{}
 	}
 	return []byte{}
 }
@@ -771,6 +827,11 @@ func nameFunc(helper *structure.Helper, values *structure.RequestData) []byte {
 		//buffer.WriteString("</a>")
 		//return buffer.Bytes()
 		return evaluateEscape(values.Posts[values.CurrentPostIndex].Tags[values.CurrentTagIndex].Name, helper.Unescaped)
+	} else if values.CurrentHelperContext == 5 { // primary tag
+		if len(values.Posts[values.CurrentPostIndex].Tags) >= 1 {
+			return evaluateEscape(values.Posts[values.CurrentPostIndex].Tags[0].Name, helper.Unescaped)
+		}
+		return []byte{}
 	}
 	// If author (commented out the code for generating a link. Ghost doesn't seem to do that).
 	//var buffer bytes.Buffer
