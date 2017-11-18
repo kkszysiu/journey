@@ -33,7 +33,9 @@ var helperFuctions = map[string]func(*structure.Helper, *structure.RequestData) 
 	"@blog.title":       atBlogDotTitleFunc,
 	"@blog.url":         atBlogDotUrlFunc,
 	"@blog.logo":        atBlogDotLogoFunc,
+	"@blog.icon":        atBlogDotLogoFunc,
 	"@blog.cover":       atBlogDotCoverFunc,
+	"@blog.cover_image": atBlogDotCoverFunc,
 	"@blog.description": atBlogDotDescriptionFunc,
 	"@blog.navigation":  navigationFunc,
 
@@ -44,6 +46,7 @@ var helperFuctions = map[string]func(*structure.Helper, *structure.RequestData) 
 	"content":    contentFunc,
 	"post_class": post_classFunc,
 	"featured":   featuredFunc,
+	"feature_image": imageFunc,
 	"id":         idFunc,
 	"post.id":    idFunc,
 
@@ -63,6 +66,7 @@ var helperFuctions = map[string]func(*structure.Helper, *structure.RequestData) 
 	"author.email":    emailFunc,
 	"author.website":  websiteFunc,
 	"author.image":    authorDotImageFunc,
+	"author.profile_image": authorDotImageFunc,
 	"author.cover":    coverFunc,
 	"author.location": locationFunc,
 
@@ -96,6 +100,7 @@ var helperFuctions = map[string]func(*structure.Helper, *structure.RequestData) 
 	"pagination.next": nextFunc,
 
 	// Possible plural arguments
+	"pagination.pages": pagesFunc,
 	"pagination.total":    paginationDotTotalFunc,
 	"../pagination.total": paginationDotTotalFunc,
 }
