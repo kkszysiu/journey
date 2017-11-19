@@ -662,6 +662,7 @@ func urlFunc(helper *structure.Helper, values *structure.RequestData) []byte {
 		if len(values.Posts[values.CurrentPostIndex].Tags) >= 1 {
 			buffer.WriteString("/tag/")
 			buffer.WriteString(values.Posts[values.CurrentPostIndex].Tags[0].Slug)
+			buffer.WriteString("/")
 			return evaluateEscape(buffer.Bytes(), helper.Unescaped)
 		}
 		return []byte{}
@@ -691,7 +692,7 @@ func excerptFunc(helper *structure.Helper, values *structure.RequestData) []byte
 						if len(words) < number {
 							return excerpt
 						}
-						return bytes.Join(words[:number], []byte(" "))
+						return append(bytes.Join(words[:number], []byte(" ")), []byte("…")...)
 					}
 				} else if key == "characters" {
 					number, err := strconv.Atoi(value)
@@ -701,7 +702,7 @@ func excerptFunc(helper *structure.Helper, values *structure.RequestData) []byte
 						if len(runes) < number {
 							return []byte(string(runes))
 						}
-						return []byte(string(runes[:number]))
+						return append([]byte(string(runes[:number])), []byte("…")...)
 					}
 				}
 			}
@@ -712,7 +713,7 @@ func excerptFunc(helper *structure.Helper, values *structure.RequestData) []byte
 		if len(words) < 50 {
 			return excerpt
 		}
-		return bytes.Join(words[:50], []byte(" "))
+		return append(bytes.Join(words[:50], []byte(" ")), []byte("…")...)
 	}
 	return []byte{}
 }
